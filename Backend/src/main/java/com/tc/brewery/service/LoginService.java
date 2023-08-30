@@ -66,24 +66,55 @@ public class LoginService implements UserDetailsService {
 
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = null;
+
         String actualUsername = null;
         String actualOtp = null;
         HttpStatus httpStatus = HttpStatus.OK;
         String message = "";
+        System.out.println("hello 1");
 
-        if (username.matches("^\\d+$")) {
-            // If the username is a valid phone number (contains only digits)
-            user = loginRepository.findByPhoneNumber("+91" + username);
-            actualUsername = user.getPhoneNumber();
-            actualOtp = user.getOtp(); // Get OTP for OTP-based authentication
-        } else if (username.contains("@")) {
+//        if (username.matches("^\\+91\\d+$")) {
+//            // If the username is a valid phone number (contains only digits)
+////            String phoneNumberWithPrefix = "+91" + username;
+//            user = loginRepository.findByPhoneNumber(phoneNumberWithPrefix);
+//            System.out.println("hello " +user);
+//            actualUsername = user.getPhoneNumber();
+//            System.out.println("actualUsername"+actualUsername);
+//            actualOtp = user.getOtp(); // Get OTP for OTP-based authentication
+//        } else if (username.contains("@")) {
+//            user = loginRepository.findByEmail(username);
+//            actualUsername = user != null ? user.getEmail() : "";
+//        } else {
+//            httpStatus = HttpStatus.BAD_REQUEST;
+//            message = "Invalid username format";
+//        }
+
+        if (username.contains("@")) {
             user = loginRepository.findByEmail(username);
             actualUsername = user != null ? user.getEmail() : "";
-        } else {
-            httpStatus = HttpStatus.BAD_REQUEST;
-            message = "Invalid username format";
+        }
+        else {
+            // If the username is a phone number
+            if (!username.startsWith("+91")) {
+                username = "+91" + username;
+            }
+
+            if (username.matches("^\\+91\\d+$")) {
+                // If the username is a valid phone number (starts with +91 and followed by digits)
+                user = loginRepository.findByPhoneNumber(username);
+                System.out.println("hello " + user);
+                actualUsername = user.getPhoneNumber();
+                System.out.println("actualUsername" + actualUsername);
+                actualOtp = user.getOtp();
+
+                // Rest of your authentication logic...
+            } else {
+                httpStatus = HttpStatus.BAD_REQUEST;
+                message = "Invalid username format";
+            }
         }
 
         if (user == null) {
@@ -91,11 +122,11 @@ public class LoginService implements UserDetailsService {
             message = "User not found with username: " + actualUsername;
         }
 
-        if (httpStatus != HttpStatus.OK) {
-            // Return the response with the desired HTTP status and message
-            String responseBody = "{\"message\":\"" + message + "\"}";
-            return (UserDetails) new ResponseEntity<>(responseBody, httpStatus);
-        }
+//        if (httpStatus != HttpStatus.OK) {
+//            // Return the response with the desired HTTP status and message
+//            String responseBody = "{\"message\":\"" + message + "\"}";
+//            return (UserDetails) new ResponseEntity<>(responseBody, httpStatus);
+//        }
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
