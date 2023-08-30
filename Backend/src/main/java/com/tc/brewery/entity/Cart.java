@@ -19,8 +19,11 @@ public class Cart {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private String modeOfPayment;
-    private  String modeOfDelivery;
+    @Enumerated(EnumType.STRING)
+    private ModeOfPayment modeOfPayment;
+
+    @Enumerated(EnumType.STRING)
+    private ModeOfDelivery modeOfDelivery;
 
     private Double totalAmount;
     @Column(name = "timestamp")
@@ -48,7 +51,7 @@ public class Cart {
 //    }
 
 
-    public Cart(Long id, User user, String modeOfPayment, String modeOfDelivery, Double totalAmount, LocalDateTime timestamp, String address, String lat, String lng, List<CartItem> cartItems) {
+    public Cart(Long id, User user, ModeOfPayment modeOfPayment, ModeOfDelivery modeOfDelivery, Double totalAmount, LocalDateTime timestamp, String address, String lat, String lng, List<CartItem> cartItems) {
         this.id = id;
         this.user = user;
         this.modeOfPayment = modeOfPayment;
@@ -85,13 +88,6 @@ public class Cart {
         this.lng = lng;
     }
 
-    public String getModeOfDelivery() {
-        return modeOfDelivery;
-    }
-
-    public void setModeOfDelivery(String modeOfDelivery) {
-        this.modeOfDelivery = modeOfDelivery;
-    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -118,13 +114,7 @@ public class Cart {
         this.user = user;
     }
 
-    public String getModeOfPayment() {
-        return modeOfPayment;
-    }
 
-    public void setModeOfPayment(String modeOfPayment) {
-        this.modeOfPayment = modeOfPayment;
-    }
 
     public Double getTotalAmount() {
         return totalAmount;
@@ -132,6 +122,22 @@ public class Cart {
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public ModeOfPayment getModeOfPayment() {
+        return modeOfPayment;
+    }
+
+    public void setModeOfPayment(ModeOfPayment modeOfPayment) {
+        this.modeOfPayment = modeOfPayment;
+    }
+
+    public ModeOfDelivery getModeOfDelivery() {
+        return modeOfDelivery;
+    }
+
+    public void setModeOfDelivery(ModeOfDelivery modeOfDelivery) {
+        this.modeOfDelivery = modeOfDelivery;
     }
 
     //    @JsonIgnore

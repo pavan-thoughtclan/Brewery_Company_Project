@@ -2,6 +2,7 @@ package com.tc.brewery.service;
 
 
 import com.tc.brewery.entity.User;
+import com.tc.brewery.entity.UserRole;
 import com.tc.brewery.repository.AddressRepository;
 import com.tc.brewery.repository.LoginRepository;
 import com.tc.brewery.repository.UserRepository;
@@ -24,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +42,7 @@ public class LoginService implements UserDetailsService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final String TWILIO_ACCOUNT_SID = "ACb5162fb992d7246e2904ae9889f6689c";
-    private final String TWILIO_AUTH_TOKEN = "44cffab828270f983efd2cb109e57ee7";
+    private final String TWILIO_AUTH_TOKEN = "362d2551fb91440521fa83acad6cc823";
 
     public User findByUsername(String username) {
         return loginRepository.findByEmail(username); // Assuming email is used as the username
@@ -57,7 +59,7 @@ public class LoginService implements UserDetailsService {
                 user.getEmail(),
                 user.getPhoneNumber(),
                 passwordEncoder.encode(user.getPassword()),
-                "ROLE_USER"
+                UserRole.ROLE_USER // Set the default role here
         );
         return loginRepository.save(userToSave);
     }
@@ -95,10 +97,9 @@ public class LoginService implements UserDetailsService {
             return (UserDetails) new ResponseEntity<>(responseBody, httpStatus);
         }
 
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
-        List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRole().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
 
         if (actualOtp != null) {
             // If actualOtp is not null, return User with actualOtp
@@ -143,10 +144,9 @@ public class LoginService implements UserDetailsService {
             // Return the response with the desired HTTP status and message
             return false;
         }
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user1.getRole().toString()));
 
-        List<SimpleGrantedAuthority> authorities = Arrays.stream(user1.getRole().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
         // Generate OTP (6-digit code)
         String lgotp = generateOtp();
         logger.info("Generated OTP: " + lgotp);

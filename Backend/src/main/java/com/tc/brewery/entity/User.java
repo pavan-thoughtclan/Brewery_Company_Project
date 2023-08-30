@@ -31,8 +31,8 @@ public class User {
 
     private String otp;
 
-    private String role;
-
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 //    @OneToMany(mappedBy = "user",cascade=CascadeType.ALL)
 
     @OneToMany(mappedBy = "user",cascade=CascadeType.PERSIST)
@@ -117,11 +117,19 @@ public class User {
         this.otp = otp;
     }
 
-    public String getRole() {
+//    public String getRole() {
+//        return role;
+//    }
+//
+//    public void setRole(String role) {
+//        this.role = role;
+//    }
+
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
@@ -154,7 +162,7 @@ public class User {
                 '}';
     }
 
-    public User(Long id, String firstName, String lastName, String email, String phoneNumber, String password, String otp, String role, List<Address> addressList, List<Cart> cartList) {
+    public User(Long id, String firstName, String lastName, String email, String phoneNumber, String password, String otp, UserRole role, List<Address> addressList, List<Cart> cartList) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -167,7 +175,7 @@ public class User {
         this.cartList = cartList;
     }
 
-    public User(String firstName, String lastName, String email, String phoneNumber, String password, String role) {
+    public User(String firstName, String lastName, String email, String phoneNumber, String password, UserRole role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

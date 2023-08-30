@@ -43,15 +43,31 @@ public class CartService {
         String modeOfPayment = cartDetails.get("modeOfPayment").toString();
         String modeOfDelivery = cartDetails.get("modeOfDelivery").toString();
         String address = cartDetails.get("address").toString();
-        String lat =  cartDetails.get("lat").toString();
+        String lat = cartDetails.get("lat").toString();
         String lng = cartDetails.get("lng").toString();
         List<Map<String, Object>> cartItemsList = (List<Map<String, Object>>) cartDetails.get("cartItems");
+
+        // Validate and set ModeOfPayment
+        ModeOfPayment paymentMode;
+        try {
+            paymentMode = ModeOfPayment.valueOf(modeOfPayment);
+        } catch (IllegalArgumentException e) {
+            return false; // Invalid payment mode
+        }
+
+        // Validate and set ModeOfDelivery
+        ModeOfDelivery deliveryMode;
+        try {
+            deliveryMode = ModeOfDelivery.valueOf(modeOfDelivery);
+        } catch (IllegalArgumentException e) {
+            return false; // Invalid delivery mode
+        }
 
         // Create a new Cart
         Cart newCart = new Cart();
         newCart.setUser(user);
-        newCart.setModeOfPayment(modeOfPayment);
-        newCart.setModeOfDelivery(modeOfDelivery);
+        newCart.setModeOfPayment(paymentMode);
+        newCart.setModeOfDelivery(deliveryMode);
         newCart.setTotalAmount(totalAmount);
         newCart.setAddress(address);
         newCart.setLat(lat);
