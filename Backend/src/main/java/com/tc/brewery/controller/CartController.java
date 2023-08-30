@@ -28,14 +28,24 @@ public class CartController {
 
 
     @PostMapping("/add_cart/{userId}")
-    public ResponseEntity<Void> addCart(@PathVariable Long userId, @RequestBody Map<String, Object> cartDetails) {
+    public ResponseEntity<String> addCart(@PathVariable Long userId, @RequestBody Map<String, Object> cartDetails) {
         boolean added = cartService.addCart(userId, cartDetails);
         if (added) {
-            return ResponseEntity.ok().build(); // Status code 200 without a response body
+            return ResponseEntity.ok("{\"message\":\"Cart added successfully\"}");
         } else {
-            return ResponseEntity.badRequest().build(); // Status code 400 without a response body
+            return ResponseEntity.badRequest().body("{\"message\":\"Failed to add cart\"}");
         }
     }
+
+//    @PostMapping("/add_cart/{userId}")
+//    public ResponseEntity<Void> addCart(@PathVariable Long userId, @RequestBody Map<String, Object> cartDetails) {
+//        boolean added = cartService.addCart(userId, cartDetails);
+//        if (added) {
+//            return ResponseEntity.ok().build(); // Status code 200 without a response body
+//        } else {
+//            return ResponseEntity.badRequest().build(); // Status code 400 without a response body
+//        }
+//    }
 }
 
 
