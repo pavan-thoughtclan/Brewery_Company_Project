@@ -85,9 +85,15 @@ public class NoAuthController {
 
         if (username.contains("@")) {
             return doAuthenticateByEmail(username, password);
-        } else {
+        } else if (username.matches("^\\d+$")) {
             return doAuthenticateByPhoneNumber(username, password);
+        } else {
+            // Handle invalid input format
+            System.out.println("Invalid input format");
+            // You can log the error or take appropriate action here
         }
+        // Since you don't want to return a response here, you can return null or any placeholder value
+        return null;
     }
 
     private ResponseEntity<JwtResponse> doAuthenticateByEmail(String email, String password) {
