@@ -96,9 +96,11 @@ public class NoAuthController {
         try {
             manager.authenticate(authentication);
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            User user = loginService.findByUsername(email);
             String token = this.helper.generateToken(userDetails);
             JwtResponse response = JwtResponse.builder()
                     .jwrToken(token)
+                    .userId(user.getId())
                     .username(userDetails.getUsername()).build();
             return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {
@@ -113,9 +115,11 @@ public class NoAuthController {
         try {
             manager.authenticate(authentication);
             UserDetails userDetails = userDetailsService.loadUserByUsername(phoneNumber);
+            User user = loginService.findByPhoneNumber("+91" + phoneNumber);
             String token = this.helper.generateToken(userDetails);
             JwtResponse response = JwtResponse.builder()
                     .jwrToken(token)
+                    .userId(user.getId())
                     .username(userDetails.getUsername()).build();
             return ResponseEntity.ok(response);
         } catch (BadCredentialsException e) {
@@ -168,9 +172,12 @@ public class NoAuthController {
         try {
             manager.authenticate(authentication);
             UserDetails userDetails = userDetailsService.loadUserByUsername(lenteredphoneno);
+//            System.out.println(userDetails);
+            User user = loginService.findByPhoneNumber("+91" + lenteredphoneno);
             String token = this.helper.generateToken(userDetails);
             JwtResponse response = JwtResponse.builder()
                     .jwrToken(token)
+                    .userId(user.getId())
                     .username(userDetails.getUsername()).build();
             String storedOtpr = null;
             user1.setOtp(storedOtpr); // Set the OTP value in the User entity

@@ -40,4 +40,14 @@ public class AddressService {
     public List<Address> getAddressesByUserId(Long userId) {
         return addressRepository.findByUserId(userId);
     }
+
+
+    public boolean deleteAddressById(Long addressId) {
+        Address address = addressRepository.findAddressById(addressId);
+        if (address != null) {
+            addressRepository.delete(address);
+            return true;
+        }
+        return false;
+    }
 }
