@@ -74,7 +74,6 @@ public class LoginService implements UserDetailsService {
         String actualOtp = null;
         HttpStatus httpStatus = HttpStatus.OK;
         String message = "";
-        System.out.println("hello 1");
 
 //        if (username.matches("^\\+91\\d+$")) {
 //            // If the username is a valid phone number (contains only digits)
@@ -105,9 +104,8 @@ public class LoginService implements UserDetailsService {
             if (username.matches("^\\+91\\d+$")) {
                 // If the username is a valid phone number (starts with +91 and followed by digits)
                 user = loginRepository.findByPhoneNumber(username);
-                System.out.println("hello " + user);
                 actualUsername = user.getPhoneNumber();
-                System.out.println("actualUsername" + actualUsername);
+//                System.out.println("actualUsername" + actualUsername);
                 actualOtp = user.getOtp();
 
                 // Rest of your authentication logic...
