@@ -1,4 +1,5 @@
 package com.tc.brewery.entity;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,7 +18,8 @@ public class CartItem {
 
     @ManyToOne
 //    @JsonIgnoreProperties("cartItems")
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonInclude(Include.NON_NULL)
     @JoinColumn(name = "beer_id",referencedColumnName = "id") // The foreign key column in CartItem table
     private Beer beer;
     @JsonInclude(Include.NON_NULL)
@@ -30,7 +32,8 @@ public class CartItem {
     private Double amountOfEachBeer;
 
     @ManyToOne
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonInclude(Include.NON_NULL)
     @JoinColumn(name = "food_id", referencedColumnName = "id")
     private Food food;
     @JsonInclude(Include.NON_NULL)
@@ -89,17 +92,59 @@ public class CartItem {
         this.amountOfEachFood = amountOfEachFood;
     }
 
+    @JsonGetter("beer")
+    public Object getBeerInfo() {
+        if (beer != null) {
+            return new ItemInfo(beer.getId(), beer.getName());
+        }
+        return null;
+    }
+
+    @JsonGetter("food")
+    public Object getFoodInfo() {
+        if (food != null) {
+            return new ItemInfo(food.getId(), food.getFood_name());
+        }
+        return null;
+    }
+    private static class ItemInfo {
+        private int id;
+        private String name;
+
+        public ItemInfo(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        // Getters for id and name
+    }
     @Override
     public String toString() {
         return "CartItem{" +
                 "id=" + id +
                 ", cart=" + cart +
-//                ", beer=" + beer +
+                ", beer=" + beer +
                 ", beerQuantity=" + beerQuantity +
                 ", beerVolumeInMl=" + beerVolumeInMl +
                 ", beerAmount=" + beerAmount +
                 ", amountOfEachBeer=" + amountOfEachBeer +
-//                ", food=" + food +
+                ", food=" + food +
                 ", foodQuantity=" + foodQuantity +
                 ", foodAmount=" + foodAmount +
                 ", amountOfEachFood=" + amountOfEachFood +
