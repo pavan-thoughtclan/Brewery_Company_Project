@@ -15,6 +15,10 @@ public class Rating {
     private Beer beer;
 
     @ManyToOne
+    @JoinColumn(name = "food_id", referencedColumnName = "id")
+    private Food food;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -25,7 +29,8 @@ public class Rating {
     public Rating() {
     }
 
-//    public Rating(Long id, Beer beer, User user, int rating, String review) {
+
+//    public Rating(Long id, Beer beer, User user, BigDecimal rating, String review) {
 //        this.id = id;
 //        this.beer = beer;
 //        this.user = user;
@@ -33,9 +38,10 @@ public class Rating {
 //        this.review = review;
 //    }
 
-    public Rating(Long id, Beer beer, User user, BigDecimal rating, String review) {
+    public Rating(Long id, Beer beer, Food food, User user, BigDecimal rating, String review) {
         this.id = id;
         this.beer = beer;
+        this.food = food;
         this.user = user;
         this.rating = rating;
         this.review = review;
@@ -47,6 +53,14 @@ public class Rating {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
     }
 
     public Beer getBeer() {

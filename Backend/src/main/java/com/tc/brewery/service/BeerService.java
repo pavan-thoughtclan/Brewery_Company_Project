@@ -23,8 +23,6 @@ public class BeerService {
     @Autowired
     private UserRepository userRepository;
 
-    private static final BigDecimal MIN_RATING = new BigDecimal("4.5");
-
     public Set<String> getAllCategories() {
         List<Beer> beers = beerRepository.findAll();
         Set<String> categories = new HashSet<>();
@@ -53,14 +51,6 @@ public class BeerService {
         return beerRepository.findById(beerId).orElse(null);
     }
 
-    public List<Beer> getBeersWithHighRatings() {
-        return beerRepository.findByAverageRatingGreaterThanEqual(MIN_RATING);
-    }
-    public List<Beer> getBeersWithinManualRatingsRange() {
-        BigDecimal lowerLimit = new BigDecimal("4.0");
-        BigDecimal upperLimit = new BigDecimal("4.4");
 
-        return beerRepository.findByAverageRatingBetween(lowerLimit, upperLimit);
-    }
 
 }

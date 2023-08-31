@@ -1,14 +1,15 @@
 package com.tc.brewery.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Food {
@@ -24,10 +25,35 @@ public class Food {
     @JsonIgnoreProperties("food")
     private List<CartItem> cartItems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "food",cascade= CascadeType.ALL)
+    @JsonManagedReference
+    private List<Rating> ratings = new ArrayList<>();
+    @Column(precision = 3, scale = 1) // Adjust precision and scale as needed
+    private BigDecimal averageRating; // Store average rating as a BigDecimal
+
+    public BigDecimal getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(BigDecimal averageRating) {
+        this.averageRating = averageRating;
+    }
+
     public Food() {
     }
 
-    public Food(int id, String food_name, String category, String image_url, BigDecimal food_price, String description, String calories, List<CartItem> cartItems) {
+//    public Food(int id, String food_name, String category, String image_url, BigDecimal food_price, String description, String calories, List<CartItem> cartItems) {
+//        this.id = id;
+//        this.food_name = food_name;
+//        this.category = category;
+//        this.image_url = image_url;
+//        this.food_price = food_price;
+//        this.description = description;
+//        this.calories = calories;
+////        this.cartItems = cartItems;
+//    }
+
+    public Food(int id, String food_name, String category, String image_url, BigDecimal food_price, String description, String calories, BigDecimal averageRating) {
         this.id = id;
         this.food_name = food_name;
         this.category = category;
@@ -35,9 +61,8 @@ public class Food {
         this.food_price = food_price;
         this.description = description;
         this.calories = calories;
-//        this.cartItems = cartItems;
+        this.averageRating = averageRating;
     }
-
 
     public int getId() {
         return id;
@@ -94,6 +119,51 @@ public class Food {
     public void setCalories(String calories) {
         this.calories = calories;
     }
+    @JsonGetter("ratings") // Custom serialization for ratings
+    public List<Map<String, Object>> getRatingsInfo() {
+
+        List<Map<String, Object>> ratingsInfo = new ArrayList<>();
+        for (Rating rating : ratings) {
+            Map<String, Object> info = new HashMap<>();
+            info.put("id", rating.getId());
+            info.put("rating", rating.getRating());
+            info.put("review", rating.getReview());
+            info.put("user", getUserInfo(rating.getUser())); // Extract user info
+            ratingsInfo.add(info);
+        }
+        return ratingsInfo;
+    }
+
+    private Map<String, Object> getUserInfo(User user) {
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("id", user.getId());
+        userInfo.put("firstName", user.getFirstName()); // Include first name
+        userInfo.put("lastName", user.getLastName());   // Include last name
+        return userInfo;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Food{" +
+//                "id=" + id +
+//                ", food_name='" + food_name + '\'' +
+//                ", category='" + category + '\'' +
+//                ", image_url='" + image_url + '\'' +
+//                ", food_price=" + food_price +
+//                ", description='" + description + '\'' +
+//                ", calories='" + calories + '\'' +
+////                ", cartItems=" + cartItems +
+//                '}';
+//    }
+
 
     @Override
     public String toString() {
@@ -106,6 +176,8 @@ public class Food {
                 ", description='" + description + '\'' +
                 ", calories='" + calories + '\'' +
 //                ", cartItems=" + cartItems +
+                ", ratings=" + ratings +
+                ", averageRating=" + averageRating +
                 '}';
     }
 }

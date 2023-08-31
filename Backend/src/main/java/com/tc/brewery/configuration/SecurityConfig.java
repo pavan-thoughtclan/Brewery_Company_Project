@@ -29,7 +29,7 @@ public class SecurityConfig {
                                 "/userwithaddress/{userId}",
                                 "/vendor",
                                 "/add_address/{userId}",
-                                "/ratings/{beerId}/{userId}",
+                                "/beerratings/{beerId}/{userId}",
                                 "/get_cart/{userId}",
                                 "/add_cart/{userId}",
                                 "/beers/categories",
@@ -39,7 +39,12 @@ public class SecurityConfig {
                                 "/beers/{beerId}",
                                 "/beers/Highrated",
                                 "/beers/Moderaterated",
-                                "/address/{user_id}"
+                                "/address/{user_id}",
+                                "/foodratings/{foodId}/{userId}",
+                                "/foodcategories/{category}",
+                                "/foodcategories/{category}/{foodId}",
+                                "/foods/{fodId}",
+                                "/foodcategories"
                         ).authenticated()
                         .requestMatchers(
                                 "/auth/login/passcode-login",

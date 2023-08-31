@@ -51,15 +51,5 @@ public class BeerController {
 
         return ResponseEntity.ok(beer);
     }
-
-    @GetMapping("/beers/Highrated")
-    public List<Beer> getHighRatedBeers() {
-        return beerService.getBeersWithHighRatings();
-    }
-
-    @GetMapping("/beers/Moderaterated")
-    public List<Beer> getBeersWithinManualRatingsRange() {
-        return beerService.getBeersWithinManualRatingsRange();
-    }
 }
 
