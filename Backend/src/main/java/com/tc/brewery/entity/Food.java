@@ -119,6 +119,7 @@ public class Food {
     public void setCalories(String calories) {
         this.calories = calories;
     }
+
     @JsonGetter("ratings") // Custom serialization for ratings
     public List<Map<String, Object>> getRatingsInfo() {
 
