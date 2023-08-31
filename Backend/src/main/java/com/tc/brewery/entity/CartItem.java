@@ -1,5 +1,6 @@
 package com.tc.brewery.entity;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -19,16 +20,30 @@ public class CartItem {
     @JsonIgnore
     @JoinColumn(name = "beer_id",referencedColumnName = "id") // The foreign key column in CartItem table
     private Beer beer;
-
+    @JsonInclude(Include.NON_NULL)
     private Integer beerQuantity;
+    @JsonInclude(Include.NON_NULL)
     private Double beerVolumeInMl;
+    @JsonInclude(Include.NON_NULL)
     private Double beerAmount;
+    @JsonInclude(Include.NON_NULL)
     private Double amountOfEachBeer;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "food_id", referencedColumnName = "id")
+    private Food food;
+    @JsonInclude(Include.NON_NULL)
+    private Integer foodQuantity;
+    @JsonInclude(Include.NON_NULL)
+    private Double foodAmount;
+    @JsonInclude(Include.NON_NULL)
+    private Double amountOfEachFood;
 
     public CartItem() {
     }
 
-    public CartItem(Long id, Cart cart, Beer beer, Long beerId, Integer beerQuantity, Double beerVolumeInMl, Double beerAmount, Double amountOfEachBeer) {
+    public CartItem(Long id, Cart cart, Beer beer, Integer beerQuantity, Double beerVolumeInMl, Double beerAmount, Double amountOfEachBeer, Food food, Integer foodQuantity, Double foodAmount, Double amountOfEachFood) {
         this.id = id;
         this.cart = cart;
         this.beer = beer;
@@ -36,6 +51,42 @@ public class CartItem {
         this.beerVolumeInMl = beerVolumeInMl;
         this.beerAmount = beerAmount;
         this.amountOfEachBeer = amountOfEachBeer;
+        this.food = food;
+        this.foodQuantity = foodQuantity;
+        this.foodAmount = foodAmount;
+        this.amountOfEachFood = amountOfEachFood;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
+    }
+
+    public Integer getFoodQuantity() {
+        return foodQuantity;
+    }
+
+    public void setFoodQuantity(Integer foodQuantity) {
+        this.foodQuantity = foodQuantity;
+    }
+
+    public Double getFoodAmount() {
+        return foodAmount;
+    }
+
+    public void setFoodAmount(Double foodAmount) {
+        this.foodAmount = foodAmount;
+    }
+
+    public Double getAmountOfEachFood() {
+        return amountOfEachFood;
+    }
+
+    public void setAmountOfEachFood(Double amountOfEachFood) {
+        this.amountOfEachFood = amountOfEachFood;
     }
 
     @Override
@@ -43,10 +94,15 @@ public class CartItem {
         return "CartItem{" +
                 "id=" + id +
                 ", cart=" + cart +
+//                ", beer=" + beer +
                 ", beerQuantity=" + beerQuantity +
                 ", beerVolumeInMl=" + beerVolumeInMl +
                 ", beerAmount=" + beerAmount +
                 ", amountOfEachBeer=" + amountOfEachBeer +
+//                ", food=" + food +
+                ", foodQuantity=" + foodQuantity +
+                ", foodAmount=" + foodAmount +
+                ", amountOfEachFood=" + amountOfEachFood +
                 '}';
     }
 
